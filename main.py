@@ -70,7 +70,7 @@ def find_cheapest_flight():
     date = input("What is the date of the flight in yyyy-mm-dd? ")
 
     # Execute SQL query
-    sql = f"""
+    sql = """
             SELECT
                 f.Flight_number AS FlightNumber,
                 fa.Amount AS FareAmount
@@ -84,14 +84,14 @@ def find_cheapest_flight():
                 flights.leg_instance leg ON f.Flight_number = fl.Flight_number
             WHERE
                 fl.Leg_number = 1 -- Non-stop flight
-                AND fl.Departure_airport_code = '{departure_airport}'
-                AND fl.Arrival_airport_code = '{destination_airport}'
-                AND leg.Leg_date = '{date}'
+                AND fl.Departure_airport_code = ?
+                AND fl.Arrival_airport_code = ?
+                AND leg.Leg_date = ?
             ORDER BY
                 fa.Amount
             LIMIT 1;
             """
-    cur.execute(sql)
+    cur.execute(sql, (departure_airport, destination_airport, date, ))
 
     results = cur.fetchall()
 
@@ -157,7 +157,7 @@ def find_non_stop_flights_for_airline():
         print("No Results Found.")
         return
     
-    print(f'The non-stop flights are:', end=" ")
+    print('The non-stop flights are:', end=" ")
     # Display results
     for i in range(len(results)):
         if i != len(results) - 1:
@@ -328,7 +328,6 @@ def bert():
 
         # Validation
         model.eval()
-        total_val_loss = 0
         predictions = []
 
         with torch.no_grad():
