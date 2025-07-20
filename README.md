@@ -1,4 +1,4 @@
-NLP and ML Experiments: From Trees to Transformers
+# NLP and ML Experiments: From Trees to Transformers
 
 This repository showcases a hands-on exploration of core machine learning techniques across both traditional and deep learning paradigms. It includes models built using:
 - **Decision Trees**
@@ -9,7 +9,7 @@ Built using **PyTorch**, **scikit-learn**, and **HuggingFace Transformers**, thi
 
 ---
 
-## 🔧 Tech Stack
+## Tech Stack
 
 - Python
 - PyTorch
