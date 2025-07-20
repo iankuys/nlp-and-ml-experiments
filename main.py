@@ -70,7 +70,7 @@ def find_cheapest_flight():
     date = input("What is the date of the flight in yyyy-mm-dd? ")
 
     # Execute SQL query
-    sql = f"""
+    sql = """
             SELECT
                 f.Flight_number AS FlightNumber,
                 fa.Amount AS FareAmount
@@ -84,14 +84,14 @@ def find_cheapest_flight():
                 flights.leg_instance leg ON f.Flight_number = fl.Flight_number
             WHERE
                 fl.Leg_number = 1 -- Non-stop flight
-                AND fl.Departure_airport_code = '{departure_airport}'
-                AND fl.Arrival_airport_code = '{destination_airport}'
-                AND leg.Leg_date = '{date}'
+                AND fl.Departure_airport_code = ?
+                AND fl.Arrival_airport_code = ?
+                AND leg.Leg_date = ?
             ORDER BY
                 fa.Amount
             LIMIT 1;
             """
-    cur.execute(sql)
+    cur.execute(sql, (departure_airport, destination_airport, date, ))
 
     results = cur.fetchall()
 
@@ -109,17 +109,17 @@ def find_flight_and_seat_info():
     customer_name = input("Please enter the customer’s name: ")
 
     # Execute SQL query
-    sql = f"""
+    sql = """
             SELECT 
                 f.Flight_number as FlightNumber, 
                 f.Seat_number as SeatNumber
             FROM
                 seat_reservation f 
             WHERE
-                f.Customer_name = '{customer_name}'
+                f.Customer_name = ?
             """
 
-    cur.execute(sql)
+    cur.execute(sql, (customer_name, ))
 
     results = cur.fetchall()
 
@@ -136,7 +136,7 @@ def find_non_stop_flights_for_airline():
     airline_name = input("What is the name of the airline: ")
 
     # Execute SQL query
-    sql = f"""
+    sql = """
             SELECT 
                 f.Flight_number 
             FROM 
@@ -147,9 +147,9 @@ def find_non_stop_flights_for_airline():
                 f.Flight_number = fl.Flight_number 
             WHERE 
                 fl.Leg_number = 1 
-                AND Airline = '{airline_name}' 
+                AND Airline = ? 
             """
-    cur.execute(sql)
+    cur.execute(sql, (airline_name, ))
 
     results = cur.fetchall()
 
@@ -157,7 +157,7 @@ def find_non_stop_flights_for_airline():
         print("No Results Found.")
         return
     
-    print(f'The non-stop flights are:', end=" ")
+    print('The non-stop flights are:', end=" ")
     # Display results
     for i in range(len(results)):
         if i != len(results) - 1:
@@ -171,7 +171,7 @@ def find_planetype_can_land():
     dest_code = input("What is the airport code of the destination: ")
 
     # Execute SQL query
-    sql = f"""
+    sql = """
             SELECT 
 	            f.Airplane_type_name
             FROM 
@@ -181,10 +181,10 @@ def find_planetype_can_land():
             ON 
                 f.Airplane_type_name = l.Airplane_type_name 
             WHERE 
-                f.Company = '{plane_company}'
-                AND l.Airport_code = '{dest_code}'
+                f.Company = ?
+                AND l.Airport_code = ?
             """
-    cur.execute(sql)
+    cur.execute(sql, (plane_company, dest_code, ))
 
     results = cur.fetchall()
 
@@ -205,7 +205,7 @@ def find_price_from_name():
     customer_name = input("Please enter customer name: ")
 
     # Execute SQL query
-    sql = f"""
+    sql = """
             SELECT 
                 fa.Fare_code, fa.Amount 
             FROM 
@@ -215,9 +215,9 @@ def find_price_from_name():
             ON 
                 sr.Flight_number = fa.Flight_number 
             WHERE 
-                sr.Customer_name = '{customer_name}'
+                sr.Customer_name = ?
             """
-    cur.execute(sql)
+    cur.execute(sql, (customer_name, ))
 
     results = cur.fetchall()
 
@@ -328,7 +328,6 @@ def bert():
 
         # Validation
         model.eval()
-        total_val_loss = 0
         predictions = []
 
         with torch.no_grad():
