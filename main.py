@@ -1,7 +1,6 @@
 import pymysql
 from transformers import BertTokenizer, BertModel
 import torch
-import random
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -17,6 +16,7 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz # Import Decision Tree Classifier
 import graphviz
+import secrets
 
 def relational_queries():
     print("1. Find the cheapest non-stop flight given airports and a date.")
@@ -235,7 +235,7 @@ def bert():
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     np.random.seed(seed)
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
 
     # Access the GPU of current machine
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
